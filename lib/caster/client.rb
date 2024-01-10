@@ -1,13 +1,14 @@
 module Caster
   class Client
-    def initialize(host, port, password = nil)
+    def initialize(host, port, password = nil, read_timeout = 5)
       @host = host
       @port = port
       @password = password
+      @read_timeout = read_timeout
     end
 
     def channel(type)
-      channel_class(type).new(Connection.connect(@host, @port, type, @password))
+      channel_class(type).new(Connection.connect(@host, @port, type, @password, @read_timeout))
     end
 
     private

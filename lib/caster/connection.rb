@@ -5,15 +5,16 @@ module Caster
       connection if connection.connect
     end
 
-    def initialize(host, port, channel_type, password = nil)
+    def initialize(host, port, channel_type, password = nil, read_timeout = 5)
       @host = host
       @port = port
       @channel_type = channel_type
       @password = password
+      @read_timeout = read_timeout
     end
 
     def connect
-      socket.gets # ...
+      socket.gets # get welcome message
       write(['START', @channel_type, @password].compact.join(' '))
       read.start_with?('STARTED ')
     end
@@ -28,18 +29,25 @@ module Caster
     end
 
     def read
-      data = socket.gets&.chomp
+      data = nil
+
+      Timeout.timeout(@read_timeout) do
+        # chomp to remove newline
+        data = socket.gets&.chomp
+      end
 
       if data.nil?
         # connection was dropped from timeout
         disconnect
-        raise ServerError, "Connection expired. Please reconnect."
+        raise ConnectionExpired, "Connection expired. Please reconnect."
       end
 
       raise ServerError, "#{data.force_encoding('UTF-8')} (Command ran: #{@last_write})" if data.start_with?('ENDED ')
       raise ServerError, "#{data.force_encoding('UTF-8')} (Command ran: #{@last_write})" if data.start_with?('ERR ')
 
       data
+    rescue Timeout::Error
+      raise ServerError, "Response server timed out (Command ran: #{@last_write})"
     end
 
     def write(data)
@@ -49,7 +57,7 @@ module Caster
         socket.puts(data)
       rescue Errno::EPIPE => error
         disconnect
-        raise ServerError, "Connection expired. Please reconnect.", error.backtrace
+        raise ConnectionExpired, "Connection expired. Please reconnect.", error.backtrace
       end
     end
 
@@ -58,7 +66,7 @@ module Caster
 
     def socket
       @socket ||= begin
-                    socket = TCPSocket.open(@host, @port)
+                    socket = TCPSocket.open(@host, @port, nil, nil)
                     # disables Nagle's Algorithm, prevents multiple round trips with MULTI
                     socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
                     socket
