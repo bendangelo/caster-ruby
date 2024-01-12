@@ -13,10 +13,13 @@ module Caster
       let(:text) { 'text' }
 
       describe '#push' do
-        # TODO: test batch pushes
-        # TODO: test buffer overflow
         it 'returns true' do
           expect(subject.push(collection, bucket, object, text)).to eq(true)
+        end
+
+        it 'returns buffer overflow' do
+          text = "1" * 20_000
+          expect{ subject.push(collection, bucket, object, text) }.to raise_error
         end
       end
 

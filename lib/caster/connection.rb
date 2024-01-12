@@ -36,18 +36,11 @@ module Caster
         data = socket.gets&.chomp
       end
 
-      if data.nil?
-        # connection was dropped from timeout
-        disconnect
-        raise ConnectionExpired, "Connection expired. Please reconnect."
-      end
-
-      raise ServerError, "#{data.force_encoding('UTF-8')} (Command ran: #{@last_write})" if data.start_with?('ENDED ')
-      raise ServerError, "#{data.force_encoding('UTF-8')} (Command ran: #{@last_write})" if data.start_with?('ERR ')
+      raise ServerError.new("#{data.force_encoding('UTF-8')} (Command ran: #{@last_write})") if data.start_with?('ERR ')
 
       data
     rescue Timeout::Error
-      raise ServerError, "Response server timed out (Command ran: #{@last_write})"
+      raise ServerError.new("Response server timed out (Command ran: #{@last_write})")
     end
 
     def write(data)
@@ -57,7 +50,7 @@ module Caster
         socket.puts(data)
       rescue Errno::EPIPE => error
         disconnect
-        raise ConnectionExpired, "Connection expired. Please reconnect.", error.backtrace
+        raise ConnectionExpired.new("Connection expired. Please reconnect.")
       end
     end
 

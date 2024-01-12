@@ -2,14 +2,15 @@ module Caster
   module Channels
     class Ingest < Base
       def push(collection, bucket, object, text, lang = nil)
-        arr = [collection, bucket, object, normalize(text)]
-        arr << "LANG(#{lang})" if lang
+        arr = [collection, bucket, object]
+        arr << "LANG #{lang}" if lang
+        arr << "-- #{sanitize(text)}"
 
         execute('PUSH', *arr)
       end
 
       def pop(collection, bucket, object, text)
-        execute('POP', collection, bucket, object, normalize(text))
+        execute('POP', collection, bucket, object, sanitize(text))
       end
 
       def count(collection, bucket = nil, object = nil)

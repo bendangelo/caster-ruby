@@ -41,17 +41,9 @@ module Caster
         type_cast_response(connection.read)
       end
 
-      def normalize(value)
-        quote(sanitize(value))
-      end
-
       def sanitize(value)
         # remove backslashes entirely
-        value.gsub(/\\/, "").gsub('"', '\\"').gsub(/[\r\n]+/, '\\n')
-      end
-
-      def quote(value)
-        "\"#{value}\""
+        value.gsub(/\\/, "").gsub(/[\r\n]+/, '\\n')
       end
 
       def type_cast_response(value)
