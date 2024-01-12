@@ -16,7 +16,11 @@ module Caster
     def connect
       socket.gets # get welcome message
       write(['START', @channel_type, @password].compact.join(' '))
-      read.start_with?('STARTED ')
+
+      response = read
+      return true if response.start_with?('STARTED ')
+
+      raise AuthenticationError.new "Server responded with: #{response}"
     end
 
     def disconnect

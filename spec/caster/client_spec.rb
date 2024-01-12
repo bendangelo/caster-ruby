@@ -6,6 +6,15 @@ module Caster
 
     subject { client }
 
+    describe '#connect' do
+      let(:password) { "invalidpass@2323" }
+      let(:type) { :control }
+
+      it 'returns instance of channel' do
+        expect{ subject.channel(type) }.to raise_error AuthenticationError
+      end
+    end
+
     describe '#channel' do
       let(:type) { :control }
 

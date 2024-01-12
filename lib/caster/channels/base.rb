@@ -22,11 +22,13 @@ module Caster
           return true
         end
 
+        connection&.disconnect
+
         return false
       end
 
       def close
-        connection.disconnect
+        quit
       end
 
       def connected?

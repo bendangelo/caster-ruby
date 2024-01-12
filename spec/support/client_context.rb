@@ -3,6 +3,6 @@ module Caster
     let(:client) { Client.new(host, port, password) }
     let(:host) { 'localhost' }
     let(:port) { 1491 }
-    let(:password) { 'SecretPassword' }
+    let(:password) { 'caster' }
   end
 end
