@@ -5,12 +5,12 @@ module Caster
       connection if connection.connect
     end
 
-    def initialize(host, port, channel_type, password = nil, read_timeout = 5)
+    def initialize(host, port, channel_type, password = nil, timeout = 5)
       @host = host
       @port = port
       @channel_type = channel_type
       @password = password
-      @read_timeout = read_timeout
+      @timeout = timeout
     end
 
     def connect
@@ -35,11 +35,12 @@ module Caster
     def read
       data = nil
 
-      Timeout.timeout(@read_timeout) do
+      Timeout.timeout(@timeout) do
         # chomp to remove newline
         data = socket.gets&.chomp
       end
 
+      raise ServerError.new("No server response") if data.nil?
       raise ServerError.new("#{data.force_encoding('UTF-8')} (Command ran: #{@last_write})") if data.start_with?('ERR ')
 
       data
@@ -51,7 +52,9 @@ module Caster
       @last_write = data
 
       begin
-        socket.puts(data)
+        Timeout.timeout(@timeout) do
+          socket.puts(data)
+        end
       rescue Errno::EPIPE => error
         disconnect
         raise ConnectionExpired.new("Connection expired. Please reconnect.")
