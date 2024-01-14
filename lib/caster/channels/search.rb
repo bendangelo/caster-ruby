@@ -9,7 +9,7 @@ module Caster
         arr << "-- #{sanitize(terms)}"
 
         execute('QUERY', *arr) do
-          connection.read # ...
+          # connection.read # ...
         end
       end
 
@@ -19,7 +19,7 @@ module Caster
         arr << "-- #{sanitize(word)}"
 
         execute('SUGGEST', *arr) do
-          connection.read # ...
+          # connection.read # ...
         end
       end
 
@@ -29,7 +29,7 @@ module Caster
         arr << "OFFSET #{offset}" if offset
 
         execute('LIST', *arr) do
-          connection.read # ...
+          # connection.read # ...
         end
       end
     end
