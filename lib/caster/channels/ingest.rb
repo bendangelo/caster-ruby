@@ -1,9 +1,10 @@
 module Caster
   module Channels
     class Ingest < Base
-      def push(collection, bucket, object, text, lang = nil)
+      def push(collection, bucket, object, text, lang = nil, attrs = nil)
         arr = [collection, bucket, object]
         arr << "LANG #{lang}" if lang
+        arr << "ATTR #{attrs.join(",")}" if attrs
         arr << "-- #{sanitize(text)}"
 
         execute('PUSH', *arr)
