@@ -19,12 +19,12 @@ module Caster
 
         it 'accepts attr' do
           attrs = [1, 1]
-          expect(subject.push(collection, bucket, object, text, nil, attrs)).to eq(true)
+          expect(subject.push(collection, bucket, object, text, attrs: attrs)).to eq(true)
         end
 
         it 'accepts lang' do
           lang = :eng
-          expect(subject.push(collection, bucket, object, text, lang)).to eq(true)
+          expect(subject.push(collection, bucket, object, text, lang: lang)).to eq(true)
         end
 
         it 'returns buffer overflow' do

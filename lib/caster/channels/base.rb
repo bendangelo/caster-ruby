@@ -17,7 +17,8 @@ module Caster
 
       def quit
         if connected?
-          execute('QUIT')
+          # fixes server error if already disconnected
+          execute_silent('QUIT')
           connection.disconnect
           return true
         end
@@ -34,6 +35,17 @@ module Caster
       end
 
       private
+
+      def execute_json(command, hash)
+        connection.write("#{command} #{hash.to_json}")
+        yield if block_given?
+        type_cast_response(connection.read)
+      end
+
+      def execute_silent(*args)
+        connection.write(*args.join(' '))
+        yield if block_given?
+      end
 
       def execute(*args)
         connection.write(*args.join(' '))

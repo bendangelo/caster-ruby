@@ -1,19 +1,14 @@
 module Caster
   module Channels
     class Search < Base
-      def query(collection, bucket, terms, limit: nil, offset: nil, lang: nil, greater_than: nil, less_than: nil, equal: nil, order: nil, order_attr: nil) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
-        arr = [collection, bucket]
-        arr << "LIMIT #{limit}" if limit
-        arr << "OFFSET #{offset}" if offset
-        arr << "LANG #{lang}" if lang
-        arr << "EQ #{equal[0]},#{equal[1]}" if equal
-        arr << "LT #{less_than[0]},#{less_than[1]}" if less_than
-        arr << "GT #{greater_than[0]},#{greater_than[1]}" if greater_than
-        arr << order.to_s.upcase if order
-        arr << order_attr.to_s if order_attr
-        arr << "-- #{sanitize(terms)}"
+      def query(collection, bucket, q, opts = {}) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
+        arr = {
+          collection: collection,
+          bucket: bucket,
+          q: q,
+        }.merge opts
 
-        execute('QUERY', *arr) do
+        execute_json('QUERY', arr) do
           # connection.read # ...
         end
       end

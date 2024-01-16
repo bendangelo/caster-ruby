@@ -1,5 +1,6 @@
 require 'socket'
 require 'timeout'
+require 'json'
 
 require 'caster/version'
 require 'caster/client'

@@ -15,7 +15,7 @@ module Caster
       let(:attrs) { [1, 2] }
 
       before do
-        client.channel(:ingest).push(collection, bucket, object, terms, lang, attrs)
+        client.channel(:ingest).push(collection, bucket, object, terms, lang: lang, attrs: attrs)
         client.channel(:control).trigger('consolidate')
       end
 
@@ -25,7 +25,7 @@ module Caster
         end
 
         it 'returns proper object by order' do
-          expect(subject.query(collection, bucket, terms, order: "ASC")).to eq [object]
+          expect(subject.query(collection, bucket, terms, order: 1)).to eq [object]
         end
 
         it 'returns proper object by less than' do
@@ -41,13 +41,13 @@ module Caster
         end
 
         it 'returns proper object ordered by ASC 0' do
-          expect(subject.query(collection, bucket, terms, order: :desc, order_attr: 0)).to eq [object]
+          expect(subject.query(collection, bucket, terms, order: 0, dir: 0)).to eq [object]
         end
       end
 
-      describe.skip '#suggest' do
+      describe.pending '#suggest' do
         it 'suggest proper terms' do
-          expect(subject.suggest(collection, bucket, terms[0..-2])).to eq([terms])
+          expect(subject.suggest(collection, bucket, terms[0..-2])).to eq(terms)
         end
       end
     end

@@ -1,13 +1,15 @@
 module Caster
   module Channels
     class Ingest < Base
-      def push(collection, bucket, object, text, lang = nil, attrs = nil)
-        arr = [collection, bucket, object]
-        arr << "LANG #{lang}" if lang
-        arr << "ATTR #{attrs.join(",")}" if attrs
-        arr << "-- #{sanitize(text)}"
+      def push(collection, bucket, object, text, opts = {})
+        arr = {
+          collection: collection,
+          bucket: bucket,
+          object: object,
+          text: text,
+        }.merge opts
 
-        execute('PUSH', *arr)
+        execute_json('PUSH', arr)
       end
 
       def pop(collection, bucket, object, text)
