@@ -9,7 +9,7 @@ module Caster
         arr << "EQ #{equal[0]},#{equal[1]}" if equal
         arr << "LT #{less_than[0]},#{less_than[1]}" if less_than
         arr << "GT #{greater_than[0]},#{greater_than[1]}" if greater_than
-        arr << offset.to_s.upcase if order
+        arr << order.to_s.upcase if order
         arr << order_attr.to_s if order_attr
         arr << "-- #{sanitize(terms)}"
 
