@@ -16,13 +16,11 @@ module Caster
       end
 
       def quit
-        if connection.connected?
+        if connected?
           execute('QUIT')
           connection.disconnect
           return true
         end
-
-        connection&.disconnect
 
         return false
       end

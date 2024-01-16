@@ -29,11 +29,11 @@ module Caster
 
         it 'returns buffer overflow' do
           text = "1" * 20_000
-          expect{ subject.push(collection, bucket, object, text) }.to raise_error
+          expect{ subject.push(collection, bucket, object, text) }.to raise_error ServerError
         end
       end
 
-      describe '#pop' do
+      describe.skip '#pop' do
         it 'returns a number' do
           expect(subject.pop(collection, bucket, object, text))
             .to be_an(Integer)

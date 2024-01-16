@@ -11,7 +11,7 @@ module Caster
     describe '#quit' do
       it 'closes connection' do
         expect(subject.quit).to eq true
-        expect { subject.connection.read }.to raise_error(IOError)
+        expect(subject.connected?).to eq false
         expect(subject.quit).to eq false
       end
     end

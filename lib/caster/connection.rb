@@ -5,15 +5,25 @@ module Caster
       connection if connection.connect
     end
 
+    attr_reader :socket
+
     def initialize(host, port, channel_type, password = nil, timeout = 5)
       @host = host
       @port = port
       @channel_type = channel_type
       @password = password
       @timeout = timeout
+
     end
 
     def connect
+
+      @socket = TCPSocket.open(@host, @port, nil, nil)
+
+      # disables Nagle's Algorithm, prevents multiple round trips with MULTI
+      socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+      socket
+
       socket.gets # get welcome message
       write(['START', @channel_type, @password].compact.join(' '))
 
@@ -25,7 +35,7 @@ module Caster
 
     def disconnect
       socket&.close
-      socket = nil
+      @socket = nil
     end
 
     def connected?
@@ -61,17 +71,6 @@ module Caster
       end
     end
 
-
-    private
-
-    def socket
-      @socket ||= begin
-                    socket = TCPSocket.open(@host, @port, nil, nil)
-                    # disables Nagle's Algorithm, prevents multiple round trips with MULTI
-                    socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
-                    socket
-                  end
-    end
 
   end
 end
