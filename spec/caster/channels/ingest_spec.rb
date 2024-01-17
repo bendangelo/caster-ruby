@@ -17,6 +17,10 @@ module Caster
           expect(subject.push(collection, bucket, object, text)).to eq(true)
         end
 
+        it 'handles string collection, bucket, object' do
+          expect(subject.push(1, 2, 3, text)).to eq(true)
+        end
+
         it 'accepts attr' do
           attrs = [1, 1]
           expect(subject.push(collection, bucket, object, text, attrs: attrs)).to eq(true)

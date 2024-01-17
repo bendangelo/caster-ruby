@@ -3,9 +3,9 @@ module Caster
     class Ingest < Base
       def push(collection, bucket, object, text, opts = {})
         arr = {
-          collection: collection,
-          bucket: bucket,
-          object: object,
+          collection: collection.to_s,
+          bucket: bucket.to_s,
+          object: object.to_s,
           text: text,
         }.merge opts
 
