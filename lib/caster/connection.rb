@@ -31,6 +31,8 @@ module Caster
       return true if response.start_with?('STARTED ')
 
       raise AuthenticationError.new "Server responded with: #{response}"
+    rescue Errno::ECONNREFUSED => e
+      raise Caster::ConnectionRefused.new e.message
     end
 
     def disconnect
