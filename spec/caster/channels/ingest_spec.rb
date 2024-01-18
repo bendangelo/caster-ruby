@@ -26,6 +26,16 @@ module Caster
           expect(subject.push(collection, bucket, object, text, attrs: attrs)).to eq(true)
         end
 
+        it 'accepts keywords' do
+          keywords = "extra keywods"
+          expect(subject.push(collection, bucket, object, text, keywords: keywords)).to eq(true)
+        end
+
+        it 'accepts headers' do
+          headers = "channel name"
+          expect(subject.push(collection, bucket, object, text, headers: headers)).to eq(true)
+        end
+
         it 'accepts lang' do
           lang = :eng
           expect(subject.push(collection, bucket, object, text, lang: lang)).to eq(true)
