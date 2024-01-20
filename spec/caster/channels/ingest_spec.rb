@@ -14,36 +14,32 @@ module Caster
 
       describe '#push' do
         it 'returns true' do
-          expect(subject.push(collection, bucket, object, text)).to eq(true)
-        end
-
-        it 'handles string collection, bucket, object' do
-          expect(subject.push(1, 2, 3, text)).to eq(true)
+          expect(subject.push({collection: collection, bucket: bucket, object: object, text: text)).to eq(true)
         end
 
         it 'accepts attr' do
           attrs = [1, 1]
-          expect(subject.push(collection, bucket, object, text, attrs: attrs)).to eq(true)
+          expect(subject.push(collection: collection, bucket: bucket, object: object, text: text, attrs: attrs)).to eq(true)
         end
 
         it 'accepts keywords' do
           keywords = "extra keywods"
-          expect(subject.push(collection, bucket, object, text, keywords: keywords)).to eq(true)
+          expect(subject.push(collection: collection, bucket: bucket, object: object, text: text, keywords: keywords)).to eq(true)
         end
 
         it 'accepts headers' do
           headers = "channel name"
-          expect(subject.push(collection, bucket, object, text, headers: headers)).to eq(true)
+          expect(subject.push(collection: collection, bucket: bucket, object: object, text: text, headers: headers)).to eq(true)
         end
 
         it 'accepts lang' do
           lang = :eng
-          expect(subject.push(collection, bucket, object, text, lang: lang)).to eq(true)
+          expect(subject.push(collection: collection, bucket: bucket, object: object, text: text, lang: lang)).to eq(true)
         end
 
         it 'returns buffer overflow' do
           text = "1" * 20_000
-          expect{ subject.push(collection, bucket, object, text) }.to raise_error ServerError
+          expect{ subject.push(collection: collection, bucket: bucket, object: object, text: text) }.to raise_error ServerError
         end
       end
 

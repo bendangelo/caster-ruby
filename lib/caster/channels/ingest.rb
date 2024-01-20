@@ -1,15 +1,8 @@
 module Caster
   module Channels
     class Ingest < Base
-      def push(collection, bucket, object, text, opts = {})
-        arr = {
-          collection: collection.to_s,
-          bucket: bucket.to_s,
-          object: object.to_s,
-          text: text,
-        }.merge opts
-
-        execute_json('PUSH', arr)
+      def push(attrs)
+        execute_json('PUSH', attrs)
       end
 
       def pop(collection, bucket, object, text)
