@@ -14,7 +14,7 @@ module Caster
 
       describe '#push' do
         it 'returns true' do
-          expect(subject.push({collection: collection, bucket: bucket, object: object, text: text)).to eq(true)
+          expect(subject.push(collection: collection, bucket: bucket, object: object, text: text)).to eq(true)
         end
 
         it 'accepts attr' do
