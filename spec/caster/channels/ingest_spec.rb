@@ -17,6 +17,10 @@ module Caster
           expect(subject.push(collection: collection, bucket: bucket, object: object, text: text)).to eq(true)
         end
 
+        it 'escapes newlines' do
+          expect(subject.push(collection: collection, bucket: bucket, object: object, text: "hello\nyep", headers: "my header\nsdf", keywords: "ketss\n-ddd")).to eq(true)
+        end
+
         it 'accepts attr' do
           attrs = [1, 1]
           expect(subject.push(collection: collection, bucket: bucket, object: object, text: text, attrs: attrs)).to eq(true)

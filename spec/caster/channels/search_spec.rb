@@ -15,7 +15,7 @@ module Caster
       let(:attrs) { [1, 2] }
 
       before do
-        client.channel(:ingest).push(collection, bucket, object, terms, lang: lang, attrs: attrs)
+        client.channel(:ingest).push(collection: collection, bucket: bucket, object: object, text: terms, lang: lang, attrs: attrs)
         client.channel(:control).trigger('consolidate')
       end
 
